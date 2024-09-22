@@ -62,7 +62,6 @@ export async function POST(request: Request) {
       await newUser.save();
     }
 
-
     const emailResponse = await sendVerificationEmaiil(
       username,
       email,
@@ -80,7 +79,6 @@ export async function POST(request: Request) {
         }
       );
     }
-
     return responseReturn(
       true,
       "user register successfully, please verify your email",
