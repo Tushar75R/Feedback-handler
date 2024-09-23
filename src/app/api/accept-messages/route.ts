@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       return responseReturn(false, "failed to update user", 401);
     }
 
-    return responseReturn(true, "chaned acceptance", 200, updatedUser);
+    return responseReturn(true, "change successfully", 200, updatedUser);
   } catch (error) {
     return responseReturn(false, "failed to update user status", 500);
   }
