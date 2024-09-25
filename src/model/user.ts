@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface Message extends Document {
   _id: mongoose.Types.ObjectId;
+  title?: string;
   content: string;
   createdAt: Date;
 }

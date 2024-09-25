@@ -11,27 +11,24 @@ export async function GET(request: Request) {
 
   const session = await getServerSession(authOptions);
   const user: User = session?.user as User;
-
   if (!session || !session.user) {
     return responseReturn(false, "Not Authenticated", 401);
   }
 
-  const userId = new mongoose.Types.ObjectId(user.id);
+  const userId = new mongoose.Types.ObjectId(user._id);
 
   try {
-    const temp = await UserModel.findOne({ _id: userId });
-    console.log(temp);
     const user = await UserModel.aggregate([
       { $match: { _id: userId } },
       { $unwind: "$messages" },
       { $sort: { "messages.createdAt": -1 } },
       { $group: { _id: "$_id", messages: { $push: "$messages" } } },
     ]);
-    if (!user || user.length === 0) {
+    if (!user) {
       return responseReturn(false, "no User found", 400);
     }
     return responseReturn(true, "user found", 200, {
-      messages: user[0].messages,
+      messages: user[0]?.messages,
     });
   } catch (error) {
     console.log("get - message ", error);

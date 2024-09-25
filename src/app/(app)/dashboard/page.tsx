@@ -30,8 +30,7 @@ const page = () => {
     );
   };
 
-  const { data: session } = useSession();
-  console.log(session);
+  const { data: session, status } = useSession();
   const form = useForm({
     resolver: zodResolver(acceptMessagesSchema),
   });
@@ -64,6 +63,7 @@ const page = () => {
       setIsSwitchLoading(true);
       try {
         const response = await axios.get<ApiResponse>("/api/get-messages");
+        console.log(response);
         setMessages(response.data.other.messages || []);
         toast({
           title: "Refreshed Messages",
@@ -80,6 +80,7 @@ const page = () => {
           variant: "destructive",
         });
       } finally {
+        setIsLoading(false);
         setIsSwitchLoading(false);
       }
     },
@@ -96,7 +97,7 @@ const page = () => {
   //handle switch change
   const handleSwitchChange = async () => {
     try {
-      const response = await axios.post<ApiResponse>("/api/accept-messsages", {
+      const response = await axios.post<ApiResponse>("/api/accept-messages", {
         acceptMessages: !acceptMessages,
       });
       setValue("acceptMessages", !acceptMessages);
@@ -104,6 +105,7 @@ const page = () => {
         title: response.data.message,
         variant: "default",
       });
+      console.log(response);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast({
@@ -114,9 +116,13 @@ const page = () => {
       });
     }
   };
-  const { username } = session?.user as User;
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
-  const profileUrl = `${baseUrl}//u//${username}`;
+
+  const { username } =
+    status === "authenticated"
+      ? (session?.user as User)
+      : { username: "Anonymous" };
+  const baseUrl = `${window.location.protocol}/${window.location.host}`;
+  const profileUrl = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
@@ -175,7 +181,7 @@ const page = () => {
           <RefreshCcw className="h-4 w-4" />
         )}
       </Button>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6 flex-wrap justify-center">
         {messages.length > 0 ? (
           messages.map((message, index) => (
             <MessageCard
