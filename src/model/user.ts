@@ -3,7 +3,8 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface Message extends Document {
   _id: mongoose.Types.ObjectId;
   title?: string;
-  content: string;
+  content?: string;
+  email?: string;
   createdAt: Date;
 }
 
@@ -17,6 +18,12 @@ const MessageSchema: Schema<Message> = new Schema({
     required: true,
     default: Date.now,
   },
+  email: {
+    type: String,
+  },
+  title: {
+    type: String,
+  },
 });
 
 export interface User {
@@ -28,6 +35,7 @@ export interface User {
   isVerified: boolean;
   isAcceptingMessage: boolean;
   messages: Message[];
+  urls: string[];
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -67,6 +75,10 @@ const UserSchema: Schema<User> = new Schema({
     default: false,
   },
   messages: [MessageSchema],
+  urls: {
+    type: [String],
+    default: [],
+  },
 });
 
 const UserModel =

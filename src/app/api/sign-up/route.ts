@@ -49,6 +49,7 @@ export async function POST(request: Request) {
       const hasedpassword = await bcrypt.hash(password, 10);
       const expiryDate = new Date();
       expiryDate.setHours(expiryDate.getHours() + 1);
+      const urls = [`${process.env.BASE_PROVIDE_URL}${username}`];
       const newUser = new UserModel({
         username,
         email,
@@ -58,8 +59,10 @@ export async function POST(request: Request) {
         isVerified: false,
         isAcceptingMessage: true,
         messages: [],
+        urls,
       });
       await newUser.save();
+      console.log(newUser);
     }
 
     const emailResponse = await sendVerificationEmaiil(

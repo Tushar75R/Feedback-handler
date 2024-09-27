@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials: any): Promise<any> {
+        console.log("ufhe");
         await dbConnect();
         try {
           const user = await UserModel.findOne({
@@ -53,6 +54,7 @@ export const authOptions: NextAuthOptions = {
         session.user.isVerified = token.isVerified;
         session.user.isAcceptingMessage = token.isAcceptingMessage;
         session.user.username = token.username;
+        session.user.urls = token.urls;
       }
       return session;
     },
@@ -62,6 +64,7 @@ export const authOptions: NextAuthOptions = {
         token.isVerified = user.isVerified;
         token.isAcceptingMessage = user.isAcceptingMessage;
         token.username = user.username;
+        token.urls = user.urls;
       }
       return token;
     },

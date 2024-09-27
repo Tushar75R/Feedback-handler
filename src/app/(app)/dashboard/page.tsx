@@ -10,12 +10,13 @@ import { acceptMessagesSchema } from "@/schemas/acceptMessageSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
-import { Loader2, RefreshCcw } from "lucide-react";
+import { Loader2, Plus, PlusCircle, RefreshCcw } from "lucide-react";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { resolve } from "path";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { map } from "zod";
 
 const page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -116,16 +117,13 @@ const page = () => {
       });
     }
   };
-
-  const { username } =
+  const { urls } =
     status === "authenticated"
       ? (session?.user as User)
-      : { username: "Anonymous" };
-  const baseUrl = `${window.location.protocol}/${window.location.host}`;
-  const profileUrl = `${baseUrl}/u/${username}`;
+      : { urls: ["nothing"] };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(profileUrl);
+  const copyToClipboard = (url: string) => {
+    navigator.clipboard.writeText(url);
     toast({
       title: "URL copied",
       description: "𝐧𝐨𝐰 𝐲𝐨𝐮 𝐚𝐫𝐞 𝐓𝐇𝐄 𝐇𝐀𝐍𝐃𝐋𝐄𝐑",
@@ -142,17 +140,29 @@ const page = () => {
 
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{" "}
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={profileUrl}
-            disabled
-            className="input input-bordered w-full p-2 mr-2"
-          />
-          <Button onClick={copyToClipboard}>Copy</Button>
-        </div>
+        {urls ? (
+          urls?.map((url: string) => {
+            return (
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  value={url}
+                  disabled
+                  className="input input-bordered w-full p-2 mr-2 mb-2"
+                />
+                <Button onClick={() => copyToClipboard(url)}>Copy</Button>
+              </div>
+            );
+          })
+        ) : (
+          <div> nothing to show</div>
+        )}
       </div>
-
+      <div className="flex justify-center">
+        <button>
+          <PlusCircle className="h-8 w-8 p-1 hover:text-slate-500 hover:bg-slate-300 rounded-2xl" />
+        </button>
+      </div>
       <div className="mb-4">
         <Switch
           {...register("acceptMessages")}
