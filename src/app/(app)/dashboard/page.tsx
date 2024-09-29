@@ -50,12 +50,24 @@ const Page = () => {
   const { register, watch, setValue } = form;
   const acceptMessages = watch("acceptMessages");
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      setUiUrls(session?.user.urls || []);
+  const fetchUrls = useCallback(async () => {
+    try {
+      const response = await axios.get("/api/fetch-urls");
+      setUiUrls(response.data.other.urls);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load URLs.",
+        variant: "destructive",
+      });
     }
-  }, [status, session, setUiUrls]);
+  }, []);
 
+  useEffect(() => {
+    if (session && session.user) {
+      fetchUrls();
+    }
+  }, [session]);
   const fetchAcceptMessage = useCallback(async () => {
     setIsSwitchLoading(true);
     try {
@@ -207,7 +219,7 @@ const Page = () => {
 
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>
-        {uiUrls.length > 0 ? (
+        {uiUrls?.length > 0 ? (
           uiUrls.map((url: string) => (
             <div className="flex items-center" key={url}>
               <input
