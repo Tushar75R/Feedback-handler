@@ -59,7 +59,6 @@ const page = () => {
         variant: "success",
       });
     }
-    console.log(result);
     if (result?.url) {
       router.replace("/dashboard");
     }
