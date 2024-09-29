@@ -26,6 +26,11 @@ const MessageSchema: Schema<Message> = new Schema({
   },
 });
 
+export interface Url {
+  url: string;
+  _id: mongoose.Types.ObjectId;
+}
+
 export interface User {
   username: string;
   email: string;
@@ -35,7 +40,7 @@ export interface User {
   isVerified: boolean;
   isAcceptingMessage: boolean;
   messages: Message[];
-  urls: string[];
+  urls: Url[];
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -75,10 +80,14 @@ const UserSchema: Schema<User> = new Schema({
     default: false,
   },
   messages: [MessageSchema],
-  urls: {
-    type: [String],
-    default: [],
-  },
+  urls: [
+    {
+      url: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 const UserModel =

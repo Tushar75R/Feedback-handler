@@ -2,7 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { responseReturn } from "@/helpers/ResponseSender";
-import UserModel from "@/model/user";
+import UserModel, { Url } from "@/model/user";
 import mongoose from "mongoose";
 
 export async function POST(request: Request) {
@@ -29,11 +29,13 @@ export async function POST(request: Request) {
       return responseReturn(false, "User not found", 404);
     }
 
-    if (user.urls.includes(newUrl)) {
+    const tempUrl = { url: newUrl } as Url;
+
+    if (user.urls.includes(tempUrl)) {
       return responseReturn(false, "URL already exists", 400);
     }
 
-    user.urls.push(newUrl);
+    user.urls.push(tempUrl);
     await user.save();
 
     return responseReturn(true, "URL added successfully", 200, {

@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 import { sendVerificationEmaiil } from "@/helpers/sendVerificationEmail";
 import { responseReturn } from "@/helpers/ResponseSender";
+import { Url } from "next/dist/shared/lib/router/router";
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -49,7 +50,9 @@ export async function POST(request: Request) {
       const hasedpassword = await bcrypt.hash(password, 10);
       const expiryDate = new Date();
       expiryDate.setHours(expiryDate.getHours() + 1);
-      const urls = [`${process.env.BASE_PROVIDE_URL}${username}`];
+      const urls = [
+        { url: `${process.env.NEXT_PUBLIC_BASE_PROVIDE_URL}${username}` },
+      ];
       const newUser = new UserModel({
         username,
         email,
@@ -59,7 +62,7 @@ export async function POST(request: Request) {
         isVerified: false,
         isAcceptingMessage: true,
         messages: [],
-        urls,
+        urls: urls,
       });
       await newUser.save();
       console.log(newUser);

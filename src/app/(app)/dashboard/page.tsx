@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { Message } from "@/model/user";
+import { Message, Url } from "@/model/user";
 import { acceptMessagesSchema } from "@/schemas/acceptMessageSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,7 +30,7 @@ const Page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-  const [uiUrls, setUiUrls] = useState<string[]>([]);
+  const [uiUrls, setUiUrls] = useState<Url[]>([]);
   const [newUrl, setNewUrl] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deleteUrl, setDeleteUrl] = useState<string | null>(null);
@@ -164,7 +164,7 @@ const Page = () => {
       });
       return;
     }
-    const breakedUrl = uiUrls[0].split("/");
+    const breakedUrl = uiUrls[0].url.split("/");
     const createdNewUrl = `${process.env.NEXT_PUBLIC_BASE_PROVIDE_URL}${
       breakedUrl[breakedUrl.length - 1]
     }/${newUrl}`;
@@ -173,7 +173,7 @@ const Page = () => {
         newUrl: createdNewUrl,
       });
       if (response.data.success) {
-        setUiUrls((prev) => [...prev, createdNewUrl]);
+        fetchUrls();
         toast({
           title: "URL added",
           description: "The new URL has been successfully added.",
@@ -197,9 +197,21 @@ const Page = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  const confirmDeleteUrl = () => {
+  const confirmDeleteUrl = async () => {
     if (deleteUrl) {
-      setUiUrls((prev) => prev.filter((url) => url !== deleteUrl));
+      const response = await axios.delete<ApiResponse>(
+        `/api/delete-url/${deleteUrl}`
+      );
+      if (!response.data.success) {
+        toast({
+          title: "Url is not delete",
+          description: response.data.message,
+          variant: "destructive",
+        });
+
+        return;
+      }
+      fetchUrls();
       toast({
         title: "URL deleted",
         description: "The URL has been successfully removed.",
@@ -220,20 +232,20 @@ const Page = () => {
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>
         {uiUrls?.length > 0 ? (
-          uiUrls.map((url: string) => (
-            <div className="flex items-center" key={url}>
+          uiUrls.map((url) => (
+            <div className="flex items-center" key={url._id.toString()}>
               <input
                 type="text"
-                value={url}
+                value={url.url}
                 disabled
                 className="input input-bordered w-full p-2 mr-2 mb-2"
               />
-              <Button onClick={() => copyToClipboard(url)} className="mr-2">
+              <Button onClick={() => copyToClipboard(url.url)} className="mr-2">
                 Copy
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => handleDeleteUrl(url)}
+                onClick={() => handleDeleteUrl(url._id.toString())}
               >
                 <Trash className="h-4 w-4" />
               </Button>
