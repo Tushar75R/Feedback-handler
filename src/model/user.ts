@@ -6,6 +6,7 @@ export interface Message extends Document {
   content?: string;
   email?: string;
   createdAt: Date;
+  endpoint: string;
 }
 
 const MessageSchema: Schema<Message> = new Schema({
@@ -24,10 +25,15 @@ const MessageSchema: Schema<Message> = new Schema({
   title: {
     type: String,
   },
+  endpoint: {
+    type: String,
+  },
 });
 
 export interface Url {
   url: string;
+  endpoint: string;
+  isAcceptingMessage: boolean;
   _id: mongoose.Types.ObjectId;
 }
 
@@ -85,6 +91,14 @@ const UserSchema: Schema<User> = new Schema({
       url: {
         type: String,
         required: true,
+      },
+      endpoint: {
+        type: String,
+        required: true,
+      },
+      isAcceptingMessage: {
+        type: Boolean,
+        default: true,
       },
     },
   ],

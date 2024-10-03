@@ -22,7 +22,6 @@ export async function GET(request: Request) {
     if (!user) {
       return responseReturn(false, "no User found", 400);
     }
-    console.log(user.urls);
     return responseReturn(true, "user found", 200, {
       urls: user.urls,
     });

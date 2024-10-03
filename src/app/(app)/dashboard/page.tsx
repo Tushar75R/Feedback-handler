@@ -164,13 +164,13 @@ const Page = () => {
       });
       return;
     }
-    const breakedUrl = uiUrls[0].url.split("/");
-    const createdNewUrl = `${process.env.NEXT_PUBLIC_BASE_PROVIDE_URL}${
-      breakedUrl[breakedUrl.length - 1]
-    }/${newUrl}`;
+    const breakedUrl = session?.user.username;
+    console.log(breakedUrl);
+    const createdNewUrl = `${process.env.NEXT_PUBLIC_BASE_PROVIDE_URL}${breakedUrl}/${newUrl}`;
     try {
       const response = await axios.post<ApiResponse>("/api/add-new-url", {
         newUrl: createdNewUrl,
+        endpoint: newUrl,
       });
       if (response.data.success) {
         fetchUrls();
@@ -180,7 +180,7 @@ const Page = () => {
           variant: "success",
         });
         setNewUrl("");
-        setIsDialogOpen(false); // Close the dialog
+        setIsDialogOpen(false);
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -217,7 +217,7 @@ const Page = () => {
         description: "The URL has been successfully removed.",
         variant: "success",
       });
-      setIsDeleteDialogOpen(false); // Close the confirmation dialog
+      setIsDeleteDialogOpen(false);
     }
   };
 
@@ -230,7 +230,7 @@ const Page = () => {
       <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>
+        <h2 className="text-lg font-semibold mb-2">Open The Link In Browser</h2>
         {uiUrls?.length > 0 ? (
           uiUrls.map((url) => (
             <div className="flex items-center" key={url._id.toString()}>
@@ -332,7 +332,6 @@ const Page = () => {
         </Button>
       </div>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

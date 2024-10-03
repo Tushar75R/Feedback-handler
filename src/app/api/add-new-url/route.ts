@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     return responseReturn(false, "Not Authenticated", 401);
   }
 
-  const { newUrl } = await request.json();
+  const { newUrl, endpoint } = await request.json();
 
   if (!newUrl || typeof newUrl !== "string") {
     return responseReturn(false, "Invalid URL provided", 400);
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       return responseReturn(false, "User not found", 404);
     }
 
-    const tempUrl = { url: newUrl } as Url;
+    const tempUrl = { url: newUrl, endpoint, isAcceptingMessage: true } as Url;
 
     if (user.urls.includes(tempUrl)) {
       return responseReturn(false, "URL already exists", 400);
