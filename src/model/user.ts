@@ -37,6 +37,21 @@ export interface Url {
   _id: mongoose.Types.ObjectId;
 }
 
+const urlSchema: Schema<Url> = new Schema({
+  url: {
+    type: String,
+    required: true,
+  },
+  endpoint: {
+    type: String,
+    required: true,
+  },
+  isAcceptingMessage: {
+    type: Boolean,
+    default: true,
+  },
+});
+
 export interface User {
   username: string;
   email: string;
@@ -86,22 +101,7 @@ const UserSchema: Schema<User> = new Schema({
     default: false,
   },
   messages: [MessageSchema],
-  urls: [
-    {
-      url: {
-        type: String,
-        required: true,
-      },
-      endpoint: {
-        type: String,
-        required: true,
-      },
-      isAcceptingMessage: {
-        type: Boolean,
-        default: true,
-      },
-    },
-  ],
+  urls: [urlSchema],
 });
 
 const UserModel =

@@ -8,12 +8,14 @@ export async function GET(
 ) {
   dbConnect();
   const { username, endpoint } = params;
+  console.log({ username, endpoint });
   const user = await UserModel.findOne({
     username,
   });
   if (!user) return responseReturn(false, "User not found", 404);
 
   const messages = user.messages.filter((m) => m.endpoint === endpoint);
+  console.log(messages);
   return responseReturn(true, "Done", 200, { messages });
 }
 
