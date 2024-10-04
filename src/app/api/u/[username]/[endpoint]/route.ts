@@ -8,7 +8,7 @@ export async function GET(
 ) {
   dbConnect();
   const { username, endpoint } = params;
-  console.log({ username, endpoint });
+  console.log(username, endpoint);
   const user = await UserModel.findOne({
     username,
   });

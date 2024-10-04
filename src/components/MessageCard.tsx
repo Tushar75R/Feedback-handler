@@ -45,8 +45,16 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
     onMessageDelete(message._id.toString());
   };
 
+  // Determine card size dynamically based on content length (e.g., larger for longer messages)
+  const cardSize =
+    message.content && message.content.length > 150
+      ? "row-span-2"
+      : "row-span-1";
+
   return (
-    <Card className="relative flex flex-col space-y-2 p-5 border border-gray-200 shadow-md rounded-md">
+    <Card
+      className={`relative flex flex-col space-y-2 p-5 border border-gray-200 shadow-md rounded-md h-auto ${cardSize}`}
+    >
       <CardHeader className="flex items-center justify-between">
         <CardTitle className="text-lg font-bold">
           {message?.title || "Untitled Message"}
@@ -54,10 +62,7 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button
-              variant="destructive"
-              className="text-red-600 absolute top-0 right-0 m-4 hover:text-red-800 p-2 rounded-full"
-            >
+            <Button className="text-red-950 bg-gray-300 absolute top-0 right-0 m-4 hover:text-red-600 hover:bg-slate-400  p-2 rounded-full">
               <X className="w-5 h-5" />
             </Button>
           </AlertDialogTrigger>
@@ -95,6 +100,7 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
           <span>
             <strong>Date:</strong> {date}
           </span>
+          <br />
           <span className="ml-4">
             <strong>Time:</strong> {time}
           </span>
