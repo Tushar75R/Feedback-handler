@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   const { acceptMessages = undefined, endpoint } = await request.json();
   // const userId = new mongoose.Types.ObjectId("66d889158da4f35cf830ff0f");
   try {
-    const user = await UserModel.findByIdAndUpdate(userId);
+    const user = await UserModel.findById(userId);
     if (!user) {
       return responseReturn(false, "user not found", 404);
     }
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       return url;
     }) as Url[];
     user.urls = updatedUrls;
-
+    await user.save();
     return responseReturn(true, "change successfully", 200);
   } catch (error) {
     return responseReturn(false, "failed to update user status", 500);

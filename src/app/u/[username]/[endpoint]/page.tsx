@@ -63,28 +63,37 @@ const Page = () => {
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue]);
-  const handleSwitchChange = async () => {
-    setIsSwitchLoading(true);
-    try {
-      setValue("acceptMessages", !acceptMessages);
-      toast({
-        title: "response.data.message",
-        variant: "default",
-      });
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      toast({
-        title: "Error",
-        description:
-          axiosError.response?.data.message ||
-          "Failed to update message setting",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSwitchLoading(false);
-    }
-  };
+  }, []);
+
+  const changeAcceptMessage = useCallback(
+    async (data: boolean) => {
+      setIsSwitchLoading(true);
+      try {
+        const response = await axios.post<ApiResponse>("/api/accept-messages", {
+          endpoint: urlArray[urlArray.length - 1],
+          acceptMessages: data,
+        });
+        setValue("acceptMessages", data);
+        toast({
+          title: response.data.message,
+          variant: "success",
+        });
+      } catch (error) {
+        const axiosError = error as AxiosError<ApiResponse>;
+        toast({
+          title: "Error",
+          description:
+            axiosError.response?.data.message ||
+            "Failed to fetch message setting",
+          variant: "destructive",
+        });
+      } finally {
+        setIsSwitchLoading(false);
+      }
+    },
+    [setValue]
+  );
+
   const fetchMessages = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -121,6 +130,7 @@ const Page = () => {
   };
   useEffect(() => {
     fetchMessages();
+    fetchAcceptMessage();
   }, []);
   useEffect(() => {}, [session, fetchAcceptMessage, acceptMessages]);
   if (!session || !session.user) {
@@ -142,7 +152,7 @@ const Page = () => {
           <Switch
             {...register("acceptMessages")}
             checked={acceptMessages}
-            onCheckedChange={handleSwitchChange}
+            onCheckedChange={changeAcceptMessage}
             disabled={isSwitchLoading}
           />
           <span className="ml-2">
