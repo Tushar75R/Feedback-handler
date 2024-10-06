@@ -53,10 +53,10 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
 
   return (
     <Card
-      className={`relative flex flex-col space-y-2 p-5 border border-gray-200 shadow-md rounded-md h-auto ${cardSize}`}
+      className={`relative flex flex-col space-y-2 p-5 border-2 border-gray-200 shadow-md rounded-xl h-auto ${cardSize}`}
     >
       <CardHeader className="flex items-center justify-between">
-        <CardTitle className="text-lg font-bold">
+        <CardTitle className="text-lg font-bold text-white">
           {message?.title || "Untitled Message"}
         </CardTitle>
 
@@ -86,17 +86,17 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
 
       {/* Content */}
       <CardContent>
-        <CardDescription className="mb-2 text-gray-700">
+        <CardDescription className="mb-2 text-white">
           <strong>Content:</strong> {message.content}
         </CardDescription>
 
-        <CardDescription className="mb-2 text-gray-700">
+        <CardDescription className="mb-2 text-white">
           <strong>Email:</strong> {message.email}
         </CardDescription>
 
         {/* Timestamp */}
         <Separator className="my-4" />
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-white">
           <span>
             <strong>Date:</strong> {date}
           </span>

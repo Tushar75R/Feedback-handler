@@ -148,7 +148,7 @@ const Page = () => {
                 type="text"
                 value={url.url}
                 disabled
-                className="input input-bordered w-full p-2 mr-2 mb-2"
+                className="input input-bordered bg-slate-200 rounded-xl text-center w-full p-2 mr-2 mb-2"
               />
               <Button onClick={() => copyToClipboard(url.url)} className="mr-2">
                 Copy

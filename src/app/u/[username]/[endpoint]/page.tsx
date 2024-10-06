@@ -14,6 +14,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { useSession } from "next-auth/react";
 import { Message } from "@/model/user";
 import MessageCard from "@/components/MessageCard";
+import { Spotlight } from "@/components/ui/Spotlight";
 
 const Page = () => {
   const { data: session, status } = useSession();
@@ -138,11 +139,12 @@ const Page = () => {
   }
   return (
     <>
-      <div className="bg-slate-100 min-h-screen p-4 ">
-        <div className="relative mt-4 flex justify-center items-center bg-gray-200 p-4">
+      <div className="bg-black min-h-screen p-4 ">
+        <Spotlight className=" left-0 md:left-60 md:-top-20" fill="white" />
+        <div className="relative mt-28 flex justify-center items-center  p-4">
           <div className="flex items-center">
             <div className="text-xl mr-6 border-white rounded-lg p-2 border-2">
-              <p>{url}</p>
+              <p className="text-white shadow-2xl shadow-gray-300">{url}</p>
             </div>
             <Button onClick={copyToClipboard}>Copy</Button>
           </div>
@@ -159,15 +161,15 @@ const Page = () => {
             {isSwitchLoading ? (
               <Loader2 className="animate-spin" />
             ) : (
-              "Accept Messages"
+              <span className="text-white">Accept Messages</span>
             )}
           </span>
         </div>
-        <h2 className="text-lg font-semibold mb-2">Messages</h2>
+        <h2 className="text-lg font-semibold text-white mb-2">Messages</h2>
         {isLoading ? (
           <Loader2 className="animate-spin" />
         ) : (
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid gap-6 grid-cols-1  md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {messages.map((message) => (
               <MessageCard
                 key={message._id.toString()}
