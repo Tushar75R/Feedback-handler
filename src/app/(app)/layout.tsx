@@ -1,4 +1,6 @@
-import Navbar from "@/components/Navbar";
+import { NavbarDemo } from "@/components/Navbar";
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { Meteors } from "@/components/ui/meteors";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -6,9 +8,11 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      {children}
+    <div className="flex w-screen h-screen bg-black flex-col ">
+      <AuroraBackground>
+        <NavbarDemo />
+        <div className="mt-28">{children}</div>
+      </AuroraBackground>
     </div>
   );
 }
