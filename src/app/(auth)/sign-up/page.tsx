@@ -23,6 +23,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { BackgroundBeams } from "@/components/ui/background-beams";
+import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
+import { motion } from "framer-motion";
 
 const page = () => {
   const [username, setUsername] = useState("");
@@ -90,12 +93,28 @@ const page = () => {
     }
   };
   return (
-    <div className="flex justify-center item-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+    <div className="flex justify-center item-center min-h-screen items-center bg-black">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white h-4/5 rounded-3xl z-10 shadow-md">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join Feedback Handler
-          </h1>
+          <HeroHighlight>
+            <motion.h1
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: [20, -5, 0],
+              }}
+              transition={{
+                duration: 0.5,
+                ease: [0.4, 0.0, 0.2, 1],
+              }}
+              className="text-2xl px-4 font-bold text-neutral-700  leading-relaxed lg:leading-snug text-center mx-auto "
+            >
+              Join us on <Highlight className="text-black">FeedCast</Highlight>
+            </motion.h1>
+          </HeroHighlight>
 
           <p className="mb-4">Sign-up to speed-up development process</p>
         </div>

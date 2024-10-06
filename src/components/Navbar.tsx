@@ -56,19 +56,22 @@ const Navbar = ({ className }: { className?: string }) => {
           </MenuItem>
           {session ? (
             <MenuItem setActive={setActive} active={active} item="LogOut">
-              <Button className="w-full md:w-auto" onClick={() => signOut()}>
+              <Button
+                className="w-full md:w-auto text-black"
+                onClick={() => signOut()}
+              >
                 Logout
               </Button>
             </MenuItem>
           ) : (
             <MenuItem setActive={setActive} active={active} item="Join-Us">
               <Link href={"/sign-in"} className="mr-3 mb-3">
-                <Button className="w-full text-white border-white border-4 rounded-xl md:w-auto">
+                <Button className="w-full text-black border-white border-4 rounded-xl md:w-auto">
                   Login
                 </Button>
               </Link>
               <Link href={"/sign-up"}>
-                <Button className="w-full text-white border-white border-4 rounded-xl md:w-auto">
+                <Button className="w-full text-black border-white border-4 rounded-xl md:w-auto">
                   Register
                 </Button>
               </Link>

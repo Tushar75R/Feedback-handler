@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { signUpSchema } from "@/schemas/signUpSchema";
 import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
+import { motion } from "framer-motion";
+
 import {
   Form,
   FormControl,
@@ -25,6 +27,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { signInSchema } from "@/schemas/signInSchema";
 import { signIn } from "next-auth/react";
+import { BackgroundBeams } from "@/components/ui/background-beams";
+import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 
 const page = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,14 +70,30 @@ const page = () => {
     setIsSubmitting(false);
   };
   return (
-    <div className="flex justify-center item-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+    <div className="flex justify-center item-center min-h-screen items-center bg-black">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white h-4/5 rounded-3xl shadow-md z-10">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join Feedback Handler
-          </h1>
-
-          <p className="mb-4">Sign-In to speed-up development process</p>
+          <HeroHighlight>
+            <motion.h1
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: [20, -5, 0],
+              }}
+              transition={{
+                duration: 0.5,
+                ease: [0.4, 0.0, 0.2, 1],
+              }}
+              className="text-2xl px-4 font-bold text-neutral-700  leading-relaxed lg:leading-snug text-center mx-auto "
+            >
+              Welcome Back To{" "}
+              <Highlight className="text-black">FeedCast</Highlight>
+            </motion.h1>
+          </HeroHighlight>
+          <p className="mb-4">We are happy to see you again</p>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -107,7 +127,7 @@ const page = () => {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 </>
               ) : (
-                "Sign-Up"
+                "Sign-In"
               )}
             </Button>
           </form>
